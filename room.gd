@@ -1,6 +1,7 @@
 extends Node2D
 var EnemyScene = preload("res://enemy.tscn")
 var weapon_node
+var enemy_count = 0
 
 func _ready():
 	weapon_node = get_node("Weapon")
@@ -8,24 +9,26 @@ func _ready():
 	weapon_node.connect("weapon_picked_up", Callable(self, "_on_weapon_picked_up"))
 
 func _on_weapon_picked_up():
-	# Create two instances of the enemy
-	var enemy1 = EnemyScene.instantiate()
-	var enemy2 = EnemyScene.instantiate()
+	if enemy_count == 0:
+		# spawn first enemy
+		spawn_enemy(Vector2(450, 600))
+
+func spawn_enemy(position):
+	var enemy = EnemyScene.instantiate()
+	enemy.position = position
+	enemy.add_to_group("enemies")
+	enemy.connect("enemy_defeated", Callable(self, "_on_enemy_defeated"))
+	add_child(enemy)
+	print("Enemy spawned at position", position)
 	
-	
-	# Add the enemies to the 'enemies' group
-	enemy1.add_to_group("enemies")
-	enemy2.add_to_group("enemies")
-
-	# Set enemies positions
-	enemy1.position = Vector2(450, 600) # Example position
-	enemy2.position = Vector2(660, 600) # Example position
-
-	# Add the enemies to the main scene
-	add_child(enemy1)
-	add_child(enemy2)
-	
-	var door_node = get_node("Door")
-	door_node.initialize_door()
-
-
+func _on_enemy_defeated():
+	enemy_count += 1
+	print("Enemy defeated. Updating count to: ", enemy_count)
+	if enemy_count == 1:
+		# Spawn two enemies after the first is defeated
+		spawn_enemy(Vector2(450, 600))
+		spawn_enemy(Vector2(660, 600))
+	elif enemy_count == 3:
+		await get_tree().create_timer(0.1).timeout
+		var door_node = get_node("Door")
+		door_node.initialize_door()
