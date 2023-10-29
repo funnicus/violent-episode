@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3 uid="uid://dr4aie0gl0dbf"]
+
+[ext_resource type="Texture2D" uid="uid://wxu4x7ugep70" path="res://art/sprites/characters/roguelikeChar_transparent.png" id="1_nxlug"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_u3rqx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f234d"]
+size = Vector2(14, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_twt4t"]
+atlas = ExtResource("1_nxlug")
+region = Rect2(0, 170, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6hge7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_twt4t")
+}],
+"loop": true,
+"name": &"Default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h5muo"]
+size = Vector2(11, 11)
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(118, 76)
+collision_layer = 3
+safe_margin = 0.1
+script = ExtResource("1_u3rqx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_f234d")
+one_way_collision_margin = 1.7
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(0, 1)
+sprite_frames = SubResource("SpriteFrames_6hge7")
+animation = &"Default"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -1)
+zoom = Vector2(2.5, 2.5)
+limit_left = 330
+limit_top = 38
+limit_right = 790
+limit_bottom = 650
+drag_vertical_enabled = true
+drag_top_margin = 0.8
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-0.5, 3.5)
+shape = SubResource("RectangleShape2D_h5muo")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

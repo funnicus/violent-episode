@@ -11,9 +11,17 @@ config_version=5
 [application]
 
 config/name="violent-episode"
+run/main_scene="res://scenes/room.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
 
+[editor]
+
+movie_writer/mjpeg_quality=0.6
+movie_writer/movie_file="C:/Users/yleiskone/Documents/Violent/violent-episode/Video.avi"
+movie_writer/fps=30
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"

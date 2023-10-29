@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0yd57ec6ntvv"]
+
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_48yo3"]
+[ext_resource type="Texture2D" uid="uid://4chj7bmpkyi1" path="res://art/sprites/dungeon/tilemap.png" id="2_agkdg"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_05lmj"]
+radius = 2.0
+height = 4.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7h4c"]
+atlas = ExtResource("2_agkdg")
+region = Rect2(16.8723, 170.183, 15.454, 16.006)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xu2jh"]
+radius = 260.0
+height = 520.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p0htg"]
+size = Vector2(12, 12)
+
+[node name="Enemy" type="CharacterBody2D"]
+safe_margin = 0.2
+script = ExtResource("1_48yo3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+shape = SubResource("CapsuleShape2D_05lmj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_s7h4c")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_xu2jh")
+
+[node name="Death" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Death"]
+position = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_p0htg")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="area_entered" from="Death" to="." method="_on_death_area_entered"]
