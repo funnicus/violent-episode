@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dteho7lqjp5k4"]
 
-[ext_resource type="Script" path="res://door.gd" id="1_fmmo0"]
+[ext_resource type="Script" path="res://scripts/door.gd" id="1_4it0j"]
 [ext_resource type="Texture2D" uid="uid://b3rx0d1b8i1gp" path="res://art/sprites/dungeon/tilemap_packed.png" id="2_41gpb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tntxr"]
@@ -15,7 +15,7 @@ atlas = ExtResource("2_41gpb")
 region = Rect2(159.652, 16.0505, 32.8367, 16.2157)
 
 [node name="Door" type="Node2D"]
-script = ExtResource("1_fmmo0")
+script = ExtResource("1_4it0j")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 

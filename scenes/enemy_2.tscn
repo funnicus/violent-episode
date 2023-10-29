@@ -1,0 +1,112 @@
+[gd_scene load_steps=7 format=3 uid="uid://bve13ody2yl76"]
+
+[ext_resource type="Texture2D" uid="uid://4chj7bmpkyi1" path="res://art/sprites/dungeon/tilemap.png" id="1_v7yeb"]
+
+[sub_resource type="GDScript" id="GDScript_amn11"]
+script/source = "extends CharacterBody2D
+
+signal enemy_defeated
+
+var speed = 25
+var player_chase = false
+var player = null
+var stop_distance = 25
+var move_direction : Vector2
+var wander_time : float = 0
+var wander_timer : float = 0
+
+
+
+func _ready():
+	print(\"Enemy is ready!\")
+	move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
+	wander_time = randf_range(0.5, 1.5)
+	
+func _physics_process(delta):
+	var move_delta = Vector2.ZERO
+	
+	if player_chase:
+		var distance_to_player = position.distance_to(player.position)
+		
+		if distance_to_player > stop_distance:
+			var direction = (player.position - position).normalized()
+			position += direction * speed * delta
+			
+	else:
+		wander_timer += delta
+		position += move_direction * speed * 0.5 * delta
+		var collision = move_and_collide(move_delta)
+		
+		if collision:
+			move_direction = -move_direction
+			move_delta = move_direction * speed * 0.5 * delta
+			move_and_collide(move_delta)
+		
+		if wander_timer > wander_time:
+			wander_timer = 0
+			move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
+			wander_time = randf_range(0.5, 1.5)
+	move_and_slide()
+
+func _on_area_2d_body_entered(body):
+	print(\"Player detectecd\")
+	player = body
+	player_chase = true
+
+
+func _on_area_2d_body_exited(body):
+	player = null
+	player_chase = false
+
+
+
+func _on_death_area_entered(area):
+	if \"Bullet_Area\" in area.name:
+		emit_signal(\"enemy_defeated\")
+		queue_free()
+"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_05lmj"]
+radius = 2.0
+height = 4.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sovg8"]
+atlas = ExtResource("1_v7yeb")
+region = Rect2(16.7633, 152.566, 16.5592, 16.621)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pfpfd"]
+radius = 107.0
+height = 218.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p0htg"]
+size = Vector2(12, 12)
+
+[node name="Enemy2" type="CharacterBody2D"]
+script = SubResource("GDScript_amn11")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+shape = SubResource("CapsuleShape2D_05lmj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_sovg8")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_pfpfd")
+
+[node name="Death" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Death"]
+position = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_p0htg")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered" flags=18]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited" flags=18]
+[connection signal="area_entered" from="Death" to="." method="_on_death_area_entered"]
+[connection signal="body_entered" from="Death" to="." method="_on_death_body_entered" flags=18]

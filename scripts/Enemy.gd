@@ -13,8 +13,10 @@ func _ready():
 	
 func _physics_process(delta):
 	if player_chase:
-		position += (player.position - position)/speed
-
+		var direction = (player.position - position).normalized()
+		position += direction * speed * delta
+		move_and_slide()
+	
 
 func _on_area_2d_body_entered(body):
 	print("Player detectecd")
@@ -27,8 +29,9 @@ func _on_area_2d_body_exited(body):
 	player_chase = false
 
 
-func _on_death_body_entered(body):
-	if body.name == "Player":
-		print("Emitting enemy_defeated signal...")
+func _on_death_area_entered(area):
+	if "Bullet_Area" in area.name:
 		emit_signal("enemy_defeated")
-		self.queue_free()
+		area.get_parent().queue_free()
+		queue_free()
+		

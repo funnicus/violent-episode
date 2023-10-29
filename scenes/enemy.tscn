@@ -1,25 +1,26 @@
 [gd_scene load_steps=7 format=3 uid="uid://c0yd57ec6ntvv"]
 
-[ext_resource type="Script" path="res://Enemy.gd" id="1_60lwj"]
-[ext_resource type="Texture2D" uid="uid://4chj7bmpkyi1" path="res://art/sprites/dungeon/tilemap.png" id="2_t00xl"]
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_48yo3"]
+[ext_resource type="Texture2D" uid="uid://4chj7bmpkyi1" path="res://art/sprites/dungeon/tilemap.png" id="2_agkdg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_05lmj"]
-radius = 3.0
-height = 6.0
+radius = 2.0
+height = 4.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s7h4c"]
-atlas = ExtResource("2_t00xl")
+atlas = ExtResource("2_agkdg")
 region = Rect2(16.8723, 170.183, 15.454, 16.006)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xu2jh"]
-radius = 143.0
-height = 286.0
+radius = 260.0
+height = 520.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p0htg"]
 size = Vector2(12, 12)
 
 [node name="Enemy" type="CharacterBody2D"]
-script = ExtResource("1_60lwj")
+safe_margin = 0.2
+script = ExtResource("1_48yo3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 0)
@@ -45,4 +46,4 @@ shape = SubResource("RectangleShape2D_p0htg")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
-[connection signal="body_entered" from="Death" to="." method="_on_death_body_entered"]
+[connection signal="area_entered" from="Death" to="." method="_on_death_area_entered"]

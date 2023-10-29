@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://2ps0msylgbqx"]
+
+[ext_resource type="Script" path="res://Bullet.gd" id="1_go7ye"]
+[ext_resource type="Texture2D" uid="uid://4chj7bmpkyi1" path="res://art/sprites/dungeon/tilemap.png" id="1_uwdpi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wwjs3"]
+atlas = ExtResource("1_uwdpi")
+region = Rect2(190.728, 170.436, 8.82944, 15.2062)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2qiec"]
+size = Vector2(6, 14)
+
+[node name="Bullet" type="Node2D"]
+script = ExtResource("1_go7ye")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 1)
+texture = SubResource("AtlasTexture_wwjs3")
+offset = Vector2(0, -1)
+
+[node name="Bullet_Area" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bullet_Area"]
+shape = SubResource("RectangleShape2D_2qiec")

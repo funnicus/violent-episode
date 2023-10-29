@@ -9,7 +9,7 @@ func _ready():
 	
 	
 
-func initialize_door():
+func open_door():
 	$ClosedDoorSprite.visible = false
 	$OpenDoorSprite.visible = true
 
