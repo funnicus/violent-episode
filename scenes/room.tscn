@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://sk6puhu2qfud"]
+[gd_scene load_steps=9 format=3 uid="uid://sk6puhu2qfud"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_gpj00"]
 [ext_resource type="Texture2D" uid="uid://b3rx0d1b8i1gp" path="res://art/sprites/dungeon/tilemap_packed.png" id="2_avorc"]
 [ext_resource type="PackedScene" uid="uid://dr4aie0gl0dbf" path="res://scenes/player.tscn" id="3_mt8sd"]
 [ext_resource type="PackedScene" uid="uid://pe6g5whk5qml" path="res://weapon.tscn" id="4_3h40h"]
 [ext_resource type="PackedScene" uid="uid://dteho7lqjp5k4" path="res://scenes/door.tscn" id="5_oc67r"]
+[ext_resource type="AudioStream" uid="uid://c4l5bjgut002g" path="res://sound/kids_level_theme.mp3" id="6_1m5pj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wphd5"]
 texture = ExtResource("2_avorc")
@@ -499,5 +500,10 @@ position = Vector2(561, 443)
 
 [node name="Door" parent="." instance=ExtResource("5_oc67r")]
 position = Vector2(560, 407)
+
+[node name="BG Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_1m5pj")
+volume_db = -20.98
+autoplay = true
 
 [connection signal="weapon_picked_up" from="Weapon" to="." method="_on_weapon_weapon_picked_up"]
