@@ -5,6 +5,9 @@ const MAX_SPEED = 110
 var input = Vector2.ZERO
 var bullet_scene : PackedScene = preload("res://Bullet.tscn")
 @export var bullet_speed: float = 200
+@export var ghost_node : PackedScene
+@onready var ghost_timer = $GhostTimer
+@onready var particles =$GPUParticles2D
 
 var cooldown_duration: float = 0.5 #seconds between shots
 var last_shot_time: float = -cooldown_duration
@@ -16,6 +19,8 @@ func _ready():
 	
 func _physics_process(delta):
 	handle_movement_2(delta)
+	
+	#look_at(get_global_mouse_position())
 
 func get_input():
 	input.x = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
@@ -40,7 +45,10 @@ func _input(event):
 		if last_shot_time >= cooldown_duration:
 			shoot(event.global_position)
 			last_shot_time = 0
-		
+	
+	if event.is_action_pressed("dash"):
+		dash()
+
 func shoot(target_position):
 	var direction = target_position - global_position
 	direction = direction.normalized()
@@ -61,3 +69,21 @@ func die():
 func _on_hitbox_body_entered(body):
 	if body.name == "Enemy":
 		die()
+
+#func add_ghost():
+	#var ghost = ghost_node.instantiate()
+	#ghost.set_property(position, $Sprite2D.scale)
+
+#func _on_ghost_timer_timeout():
+	#add_ghost()
+
+func dash():
+	#ghost_timer.start()
+	particles.emitting = true
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "position", position + velocity * 1.5, 0.30)
+	
+	await tween.finished
+	#ghost_timer.stop()
+	particles.emitting = false
