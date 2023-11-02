@@ -9,6 +9,23 @@ var bullet_scene : PackedScene = preload("res://Bullet.tscn")
 var cooldown_duration: float = 0.5 #seconds between shots
 var last_shot_time: float = -cooldown_duration
 
+var rng = RandomNumberGenerator.new()
+
+# Stepping sound effects
+var StepSounds = [
+	preload("res://sound/misc/step1.ogg"),
+	preload("res://sound/misc/step2.ogg"),
+	preload("res://sound/misc/step3.ogg")
+]
+
+var ShootingSounds = [
+	preload("res://sound/shooting/shoot1.ogg"),
+	preload("res://sound/shooting/shoot2.ogg"),
+	preload("res://sound/shooting/shoot3.ogg"),
+	preload("res://sound/shooting/shoot4.ogg"),
+	preload("res://sound/shooting/shoot5.ogg")
+]
+
 func _ready():
 	$Hitbox.connect("body_entered", Callable(self, "_on_body_entered"))
 	camera = $Camera2D
@@ -29,6 +46,11 @@ func handle_movement_2(delta):
 	else:
 		velocity = (input * MAX_SPEED)
 		velocity = velocity.limit_length(MAX_SPEED)
+		
+		# play step sound effect when walking
+		if !$WalkingSound.is_playing():
+			$WalkingSound.stream = StepSounds[rng.randi_range(0, StepSounds.size() - 1)]
+			$WalkingSound.play()
 	move_and_slide()
 
 func _process(delta):
@@ -52,6 +74,8 @@ func shoot(target_position):
 	
 	bullet.rotation = direction.angle() + PI/2
 	get_parent().add_child(bullet)
+	$ShootingSound.stream = ShootingSounds[rng.randi_range(0, ShootingSounds.size() - 1)]
+	$ShootingSound.play()
 	
 func die():
 	print("Player is dead")

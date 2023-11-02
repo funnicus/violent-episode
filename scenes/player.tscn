@@ -57,4 +57,10 @@ drag_top_margin = 0.8
 position = Vector2(-0.5, 3.5)
 shape = SubResource("RectangleShape2D_h5muo")
 
+[node name="WalkingSound" type="AudioStreamPlayer" parent="."]
+volume_db = -18.582
+
+[node name="ShootingSound" type="AudioStreamPlayer" parent="."]
+volume_db = -8.392
+
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

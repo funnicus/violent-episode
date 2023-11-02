@@ -14,8 +14,19 @@ var stop_distance = 25
 var move_direction : Vector2
 var wander_time : float = 0
 var wander_timer : float = 0
+var rng = RandomNumberGenerator.new()
 
+var IdleSounds = [
+	preload(\"res://sound/frog/croak1.ogg\"),
+	preload(\"res://sound/frog/croak2.ogg\"),
+	preload(\"res://sound/frog/croak3.ogg\")
+]
 
+var HitSounds = [
+	preload(\"res://sound/frog/croak_hit1.ogg\"),
+	preload(\"res://sound/frog/croak_hit2.ogg\"),
+	preload(\"res://sound/frog/croak_hit3.ogg\"),
+]
 
 func _ready():
 	print(\"Enemy is ready!\")
@@ -62,6 +73,8 @@ func _on_area_2d_body_exited(body):
 
 func _on_death_area_entered(area):
 	if \"Bullet_Area\" in area.name:
+		$AudioStreamPlayer.stream = HitSounds[rng.randi_range(0, HitSounds.size() - 1)]
+		$AudioStreamPlayer.play()
 		emit_signal(\"enemy_defeated\")
 		queue_free()
 "
@@ -105,6 +118,8 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Death"]
 position = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_p0htg")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered" flags=18]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited" flags=18]
